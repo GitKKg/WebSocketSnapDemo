@@ -22,10 +22,10 @@ import qualified System.Process          as Process
 --------------------------------------------------------------------------------
 app :: Snap ()
 app = Snap.route
-    [ ("",               Snap.ifTop $ Snap.serveFile "console.html")
-    , ("console.js",     Snap.serveFile "console.js")
+    [ ("",               Snap.ifTop $ Snap.serveFile "./js/console.html")
+    , ("console.js",     Snap.serveFile "./js/console.js")
     , ("console/:shell", console)
-    , ("style.css",      Snap.serveFile "style.css")
+    , ("style.css",      Snap.serveFile "./js/style.css")
     ]
 
 
