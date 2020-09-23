@@ -10,15 +10,17 @@
     <body>
         <div>
             <form id="login">
-                <code>URI: </code><input type="text" size="64" id="uri"
-                        value="ws://localhost:8000/console/bash" />
-                <input type="submit" style="display: none" />
+              <code>URI: </code><input type="text" size="64" id="uri"
+                                       value="ws://localhost:8000/console/bash" />
+              <!-- remove:  style="display: none  ,to show submit button " -->
+                <input type="submit"  />
             </form>
             <div id="console" style="display: none">
                 <div id="console-output"></div>
                 <form id="console-input">
-                    <code>$ </code><input type="text" size="64" id="line" />
-                    <input type="submit" style="display: none" />
+                  <code>$ </code><input type="text" size="64" id="line" />
+                  <!-- remove:  style="display: none  ,to show submit button " -->
+                  <input type="submit"  /> 
                 </form>
             </div>
         </div>
