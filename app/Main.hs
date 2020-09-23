@@ -24,7 +24,11 @@ app :: Snap ()
 app = Snap.route
     [ ("",               Snap.ifTop $ Snap.serveFile "./js/console.html")
     , ("console.js",     Snap.serveFile "./js/console.js")
-    , ("console/:shell", console)
+    
+-- ws://localhost:8000/console/bash will send GET http://localhost:8000/console/bash to server,because no ws.reciveData is waiting then
+-- then "bash" will executed by "Process.runInteractiveCommand shell" below
+-- but followed shell command is not caught by http,but by ws ,ws.reciveData is waiting already now
+    , ("console/:shell", console) -- : means shell is a variable
     , ("style.css",      Snap.serveFile "./js/style.css")
     ]
 
@@ -32,7 +36,7 @@ app = Snap.route
 --------------------------------------------------------------------------------
 console :: Snap ()
 console = do
-    Just shell <- Snap.getParam "shell"
+    Just shell <- Snap.getParam "shell" -- catch first command,could be sh or bash
     WS.runWebSocketsSnap $ consoleApp $ BC.unpack shell
 
 
@@ -42,9 +46,9 @@ consoleApp shell pending = do
     (stdin, stdout, stderr, phandle) <- Process.runInteractiveCommand shell
     conn                             <- WS.acceptRequest pending
 
-    _ <- forkIO $ copyHandleToConn stdout conn
+    _ <- forkIO $ copyHandleToConn stdout conn -- copy shell output to ws
     _ <- forkIO $ copyHandleToConn stderr conn
-    _ <- forkIO $ copyConnToHandle conn stdin
+    _ <- forkIO $ copyConnToHandle conn stdin -- copy command from ws to shell
 
     exitCode <- Process.waitForProcess phandle
     putStrLn $ "consoleApp ended: " ++ show exitCode

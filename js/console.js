@@ -39,7 +39,7 @@ $(document).ready(function () {
         var line = $('#line').val();
         ws.send(line + '\n');
         appendOutput('stdin', line + '\n');
-        $('#line').val('');
+        $('#line').val(''); // clear the content of input control
         return false;
     });
 });
